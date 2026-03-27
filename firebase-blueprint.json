@@ -1,0 +1,40 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "Stores user information and preferences.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Unique user ID from Firebase Auth." },
+        "displayName": { "type": "string", "description": "User's display name." },
+        "email": { "type": "string", "format": "email", "description": "User's email address." },
+        "photoURL": { "type": "string", "description": "URL to the user's profile picture." },
+        "role": { "type": "string", "enum": ["user", "admin"], "description": "User's role in the platform." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When the profile was created." }
+      },
+      "required": ["uid", "email"]
+    },
+    "SavedCourse": {
+      "title": "Saved Course",
+      "description": "Courses saved by the user for later viewing.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "The ID of the user who saved the course." },
+        "courseId": { "type": "integer", "description": "The ID of the course." },
+        "courseTitle": { "type": "string", "description": "The title of the course." },
+        "savedAt": { "type": "string", "format": "date-time", "description": "When the course was saved." }
+      },
+      "required": ["userId", "courseId"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile documents."
+    },
+    "/users/{userId}/savedCourses/{courseId}": {
+      "schema": "SavedCourse",
+      "description": "Subcollection of courses saved by a specific user."
+    }
+  }
+}
