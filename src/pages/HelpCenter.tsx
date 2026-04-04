@@ -3,7 +3,15 @@ import { motion, AnimatePresence } from "motion/react";
 import { Send, Bot, User, Loader2, HelpCircle } from "lucide-react";
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+let aiInstance: GoogleGenAI | null = null;
+const getAI = () => {
+  if (!aiInstance) {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) throw new Error("API Key not found");
+    aiInstance = new GoogleGenAI({ apiKey });
+  }
+  return aiInstance;
+};
 
 interface Message {
   role: "user" | "assistant";
@@ -35,6 +43,7 @@ export default function HelpCenter() {
     setIsLoading(true);
 
     try {
+      const ai = getAI();
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
         contents: userMessage,
